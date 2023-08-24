@@ -55,7 +55,7 @@ export const login = async (req, res) => {
         });
 
         const isMatch = await bcrypt.compare(password, userFound.password);
-        console.log(userFound.password);
+        //console.log(userFound.password);
         if (!isMatch) return res.status(400).json({
             message: "Incorrect password",
         });
@@ -115,17 +115,21 @@ export const profile = async (req, res) => {
 
 export const verifyToken = async (req, res) => {
     const { token } = req.cookies;
+    console.log('El token es: ' + token)
 
     if (!token) return res.send(false);
 
     //if (!token) return res.status(401).json({ message: "Unauthorized" });
 
     jwt.verify(token, TOKEN_SECRET, async (error, user) => {
+        console.log('usuaruio: ' + user.payload.id)
+        console.log('El objeto user es:', JSON.stringify(user, null, 2))
 
-        if (error) return res.status(401).json({ message: "Unauthorized" });
+        if (error) return res.status(401).json({ message: "Unauthorized token" });
 
-        const userFound = await User.findById(user.id)
-        if(!userFound) return res.status(401).json({ message: "Unauthorized"})
+        const userFound = await User.findById(user.payload.id)
+        console.log(userFound)
+        if(!userFound) return res.status(401).json({ message: "Unauthorized user"})
         
         return res.json({
             id: userFound._id,

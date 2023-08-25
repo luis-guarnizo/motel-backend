@@ -5,8 +5,8 @@ import jwt from "jsonwebtoken";
 import { TOKEN_SECRET } from "../config.js";
 
 export const register = async (req, res) => {
-    const { email, password, username } = req.body;
-    console.log(email, password, username);
+    const { email, password, username, role } = req.body;
+    console.log(email, password, username, role);
 
     try {
 
@@ -17,6 +17,7 @@ export const register = async (req, res) => {
             username,
             email,
             password: passwordHash,
+            role
         })
         console.log(newUser);
 
@@ -29,6 +30,7 @@ export const register = async (req, res) => {
             id: userSaved._id,
             username: userSaved.username,
             email: userSaved.email,
+            role: userSaved.role,
             createdAt: userSaved.createdAt,
             updatedAt: userSaved.updatedAt,
         });
@@ -72,6 +74,7 @@ export const login = async (req, res) => {
             id: userFound._id,
             username: userFound.username,
             email: userFound.email,
+            role: userFound.role,
             createdAt: userFound.createdAt,
             updatedAt: userFound.updatedAt,
         });
@@ -135,6 +138,7 @@ export const verifyToken = async (req, res) => {
             id: userFound._id,
             username: userFound.username,
             email: userFound.email,
+            role: userFound.role,
         });
     });
 }

@@ -5,7 +5,7 @@ export const authRequired = (req, res, next) => {
     //const token = req.headers.cookie;
     //const token = req.cookies.token;
     const {token} = req.cookies;
-    console.log(token)
+    //console.log(token)
 
     if(!token) return res.status(401).json({message: "no token, authotization"});
 

@@ -18,6 +18,14 @@ const userSchema = new mongoose.Schema({
     role: {
         type: String,
         required: true,
+    },
+    turno: {
+        type: String,
+        required: false,
+    },
+    estadoTurno: {
+        type: Boolean,
+        required: false,
     }
 },
 {

@@ -7,6 +7,9 @@ import authRoutes from "./routes/auth.routes.js";
 import taskRoutes from './routes/tasks.routes.js';
 import roomRoutes from './routes/rooms.routes.js';
 import serviceRoutes from './routes/services.routes.js';
+import ResumeServiceTurnoRoutes from './routes/resumeServiceTurnos.routes.js';
+import saleRoutes from './routes/sale.routes.js';
+import productRoutes from './routes/products.routes.js';
 
 
 const app = express();
@@ -40,5 +43,8 @@ app.use('/api', authRoutes);
 app.use('/api', taskRoutes);
 app.use('/api', roomRoutes);
 app.use('/api', serviceRoutes);
+app.use('/api', ResumeServiceTurnoRoutes);
+app.use('/api', saleRoutes);
+app.use('/api', productRoutes);
 
 export default app;

@@ -9,6 +9,11 @@ const roomSchema = new mongoose.Schema({
         type: Boolean,
         required: true,
     },
+    idService: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Service',
+        required: false
+    },
 },{
     timestamps: true
 });

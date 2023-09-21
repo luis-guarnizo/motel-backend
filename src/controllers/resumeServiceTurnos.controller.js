@@ -1,16 +1,17 @@
-import Service from '../models/service.model.js';
+import ResumeServiceTurno from '../models/resumeServiceTurno.js';
 import User from "../models/user.model.js";
 import Room from "../models/room.model.js";
 import { now } from 'mongoose';
 
-export const getServices = async (req, res) => {
-    const services = await Service.find({ user: req.user.payload.id }).populate('roomNumber').populate('user')
-    res.json(services);
+export const getResumeServiceTurnos = async (req, res) => {
+    const resumeServiceTurnos = await ResumeServiceTurno.find().populate('user');
+    res.json(resumeServiceTurnos);
 };
-export const getServicesByTurno = async (req, res) => {
-
+export const getResumeServiceByTurno = async (req, res) => {
 
     // Buscar el turno del usuario en la base de datos utilizando el ID
+    console.log('req by turno service');
+    //console.log(req);
     const usuario = await User.findById(req.user.payload.id);
 
     if (!usuario) {
@@ -38,65 +39,44 @@ export const getServicesByTurno = async (req, res) => {
             break;
     }
 
-    const services = await Service.find({
+    const resumeserviceTurnos = await ResumeServiceTurno.find({
         user: req.user.payload.id, createdAt: {
             $gte: startHour,
             $lt: endHour
         }
-    }).populate('roomNumber')
-    console.log(services)
-    res.json(services);
+    }).populate('user')
+    console.log(resumeserviceTurnos)
+    res.json(resumeserviceTurnos);
 };
-export const createService = async (req, res) => {
+export const createResumeServiceTurnos = async (req, res) => {
     const {
-        serviceType,
-        roomNumber,
-        vehicle,
-        guests,
-        cost,
-        starTime,
-        endTime,
-        date,
+        nombreRecepcionista,
+        turno,
+        totalSoftware,
+        totalRecepcionista,
+        diferencia,
+        totalFinal
     } = req.body;
-    //console.log(req.body)
-    let startTimeDate, endTimeDate;
-
-    switch (serviceType) {
-        case '1 Hora - $ 12.000':
-            // Calcular endTime sumando 4 horas a startTime
-            startTimeDate = new Date();
-            endTimeDate = new Date(startTimeDate.getTime() + 1 * 60 * 60 * 1000); // Sumar 1 horas en milisegundos
-            break;
-        case '4 Horas - $ 17.000':
-            // Calcular endTime sumando 4 horas a startTime
-            startTimeDate = new Date();
-            endTimeDate = new Date(startTimeDate.getTime() + 4 * 60 * 60 * 1000); // Sumar 4 horas en milisegundos
-            break;
-        case '12 Horas - $ 25.000':
-            // Calcular endTime sumando 4 horas a startTime
-            startTimeDate = new Date();
-            endTimeDate = new Date(startTimeDate.getTime() + 12 * 60 * 60 * 1000); // Sumar 12 horas en milisegundos
-            break;
-        default:
-            break;
-    }
-
-    const newService = new Service({
-        serviceType,
-        roomNumber,
-        vehicle,
-        guests,
-        cost,
-        starTime: startTimeDate,
-        endTime: endTimeDate,
-        date,
-        user: req.body.user.id
+    console.log(req.user.payload)
+    let userId = req.user.payload.id;
+    const userFound = await User.findById(userId);
+    console.log(userFound.username);
+    
+    const newService = new ResumeServiceTurno({
+        nombreRecepcionista: userFound.username,
+        turno: userFound.turno,
+        totalSoftware,
+        totalRecepcionista,
+        diferencia,
+        totalFinal,
+        //TODO:cambiar para postman por req.user.payload.id y para la app por req.body.user.id
+        user: req.user.payload.id
+        // user: req.body.user.id
     });
 
-    // Actualizar la disponibilidad de la habitación a false
-    await Room.updateOne({ _id: roomNumber }, { $set: { availability: false, idService: newService._id} });
+   
     console.log('new service')
-    console.log(newService)
+    //console.log(newService)
     const savedService = await newService.save();
     res.json(savedService);
 };

@@ -17,7 +17,9 @@ export const register = async (req, res) => {
             username,
             email,
             password: passwordHash,
-            role
+            role,
+            turno: '',
+            estadoTurno: false,
         })
         console.log(newUser);
 
@@ -31,6 +33,8 @@ export const register = async (req, res) => {
             username: userSaved.username,
             email: userSaved.email,
             role: userSaved.role,
+            turno: userSaved.turno,
+            estadoTurno: userSaved.estadoTurno,
             createdAt: userSaved.createdAt,
             updatedAt: userSaved.updatedAt,
         });
@@ -131,6 +135,7 @@ export const verifyToken = async (req, res) => {
         if (error) return res.status(401).json({ message: "Unauthorized token" });
 
         const userFound = await User.findById(user.payload.id)
+        console.log('user found')
         console.log(userFound)
         if(!userFound) return res.status(401).json({ message: "Unauthorized user"})
         

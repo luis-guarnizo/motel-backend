@@ -3,10 +3,11 @@ import Product from '../models/product.model.js'; // Importar el modelo de Venta
 // Controlador para crear una venta
 export const createProduct = async (req, res) => {
   try {
-    const { name, quantity, price, priceReception } = req.body;
+    const { name, category, quantity, price, priceReception } = req.body;
 
     const newProduct = new Product({
       name,
+      category,
       quantity,
       price,
       priceReception,
@@ -55,7 +56,7 @@ export const deleteProduct = async (req, res) => {
   try {
     const product = await Product.findByIdAndDelete(req.params.id);
     if(!product) return res.status(404).json({message: "Product not found"})
-    res.json(product);
+    res.json(product.name);
   } catch (error) {
     return res.status(404).json({message: "Product not found"})
   }
